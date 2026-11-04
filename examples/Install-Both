@@ -1,0 +1,29 @@
+; $VER: Install-Both 1.0 (4.11.2026)
+; OpenInstaller example: one script for both Installers. Commodore's
+; Installer has no @openinstaller (it reads as 0), so the extras are used
+; only when it is set, and the rest runs the same on either.
+
+(set @app-name "Both")
+(set #pics (tackon (pathonly (expandpath @icon)) "Pictures"))
+
+(if @openinstaller
+    (panel (tackon #pics "welcome.png")))
+(welcome (if @openinstaller
+             "OpenInstaller is running this script."
+             "Commodore's Installer is running this script."))
+
+(set #dest "RAM:Both")
+(makedir #dest)
+
+(if @openinstaller
+    (
+        (panel (tackon #pics "download.gif") (caption "Fetching"))
+        (download (source "https://raw.githubusercontent.com/DalsinAI/openamigainstaller/main/README.md")
+                  (dest #dest) (optional "nofail"))
+    )
+    (message "With OpenInstaller this script would download the README now.")
+)
+
+(if @openinstaller
+    (panel (tackon #pics "done.png")))
+(exit "Done: see " #dest ".")

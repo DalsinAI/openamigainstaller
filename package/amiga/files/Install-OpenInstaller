@@ -1,0 +1,78 @@
+; $VER: Install-OpenInstaller 1.0.0 (4.11.2026)
+; Installs OpenInstaller with the Installer AmigaOS 3.2 already has.
+; Run it from its icon, beside the OpenInstaller drawer where the archive
+; was unpacked.
+
+(set @app-name "OpenInstaller")
+(set #version "1.0.0")
+(set #drawer "OpenInstaller")
+
+(onerror
+    (message (cat "OpenInstaller was not installed completely." "\n\n" @error-msg
+                  "\n\nFiles already copied stay where they are. Run Install-OpenInstaller again to finish.")))
+
+; the Installer and the CPU
+(if (< @installer-version 2818051)
+    (abort "Install-OpenInstaller needs Installer 43.3 or newer. Install AmigaOS 3.2 first."))
+(set #cpu (database "cpu"))
+(if (not (or (= #cpu "68040") (= #cpu "68060") (= #cpu "68080")))
+    (abort (cat "OpenInstaller needs a 68040, 68060 or 68080. This Amiga has a " #cpu ".")))
+
+; the package: the drawer beside this script
+(set #source (pathonly (expandpath @icon)))
+(set #from (tackon #source #drawer))
+(if (<> (exists (tackon #from "OpenInstaller") (noreq)) 1)
+    (abort "The OpenInstaller drawer is not beside Install-OpenInstaller. Unpack the whole archive, then run Install-OpenInstaller from there."))
+
+(welcome (cat "This installs OpenInstaller " #version " for AmigaOS 3.2.\n\n"
+              "OpenInstaller runs Installer scripts as the Installer does, and adds downloads "
+              "and a picture panel. The Installer you have stays as it is."))
+
+; 1. the program, in C: so the Shell and icons find it
+(copylib
+    (prompt "Copying OpenInstaller to C:")
+    (help @copylib-help)
+    (source (tackon #from "OpenInstaller"))
+    (dest "C:")
+    (confirm))
+
+; 2. HTTPS for (download): gfopentls.library and its list of certificates
+(copylib
+    (prompt "Copying gfopentls.library to LIBS:. OpenInstaller's downloads use it for HTTPS.")
+    (help @copylib-help)
+    (source (tackon #from "Libs/gfopentls.library"))
+    (dest "LIBS:")
+    (confirm))
+(if (= (exists (tackon #from "S/GFOpenTLS/ca-bundle.pem") (noreq)) 1)
+    (
+        (if (<> (exists "S:GFOpenTLS" (noreq)) 2)
+            (makedir "S:GFOpenTLS"))
+        (copyfiles
+            (prompt "Copying the certificate list to S:GFOpenTLS/")
+            (help @copyfiles-help)
+            (source (tackon #from "S/GFOpenTLS/ca-bundle.pem"))
+            (dest "S:GFOpenTLS"))
+    )
+)
+
+; 3. the guide, the examples and their pictures
+(set #parent
+    (askdir
+        (prompt "Where should the OpenInstaller drawer go? It holds the guide, the example scripts and their pictures.")
+        (help "The Installer makes or updates a drawer called OpenInstaller in the drawer you choose.")
+        (default (if (= (exists "Work:" (noreq)) 2) "Work:" "SYS:"))))
+(set #dest (tackon #parent #drawer))
+(set @default-dest #dest)
+(makedir #dest (infos))
+(copyfiles
+    (prompt "Copying the guide and the examples")
+    (help @copyfiles-help)
+    (source #from)
+    (dest #dest)
+    (choices "README.md" "Guide.md" "Extras.md" "LICENSE" "Examples" "Licences")
+    (infos))
+
+(exit (cat "OpenInstaller " #version " is installed.\n\n"
+           "To use it for a script, make C:OpenInstaller the default tool of the script's icon, "
+           "or type OpenInstaller and the script's name in a Shell. "
+           "The guide is in " #dest "."))
