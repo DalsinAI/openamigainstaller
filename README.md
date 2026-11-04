@@ -13,8 +13,30 @@ script language as Commodore's Installer (it copies the OS 3.2 Installer
   window: IFF, PNG or animated GIF, through datatypes. With no picture the
   panel shows the AmigaChrome logo.
 
-The details are in [docs/Extras.md](docs/Extras.md), and
-[examples/Install-Example](examples/Install-Example) uses them all.
+The details are in [docs/Extras.md](docs/Extras.md). How to write a
+script that uses them, with examples, is in [docs/Guide.md](docs/Guide.md),
+and the scripts in [examples/](examples/) show each one.
+
+![OpenInstaller on AmigaOS 3.2.3: a download with its progress bar inside the window, and a picture in the panel](docs/images/window-download.png)
+
+## What it looks like
+
+These were taken on AmigaOS 3.2.3 (a 68040 with an RTG screen), running
+the scripts in `Examples` and the archive's own Install-OpenInstaller.
+
+| | |
+| --- | --- |
+| ![The welcome page, with the AmigaChrome logo in the panel](docs/images/window-logo.png) | ![Install-Stages' welcome page, with its own picture and caption](docs/images/window-picture.png) |
+| With no `(panel)` the panel shows the AmigaChrome logo. | A script's picture and caption (Install-Stages). |
+| ![An askoptions page](docs/images/window-choices.png) | ![The last page, with done.png](docs/images/window-done.png) |
+| `askoptions`, as the Installer asks it. | The last page, with another picture. |
+
+Install-OpenInstaller is an ordinary Installer script, so the Installer
+AmigaOS 3.2 has installs OpenInstaller:
+
+| | |
+| --- | --- |
+| ![Install-OpenInstaller in the OS 3.2 Installer](docs/images/classic-welcome.png) | ![Install-OpenInstaller finished](docs/images/classic-done.png) |
 
 ## The window
 
@@ -45,7 +67,11 @@ defaults.
 - `OpenInstaller`, the program (68040)
 - `Libs/gfopentls.library` and `S/GFOpenTLS/ca-bundle.pem`, for HTTPS:
   copy them to `LIBS:` and `S:GFOpenTLS/` if you don't have them
-- `Examples/`, `Extras.md`, this README, the licences
+- `Examples/` (three scripts and their pictures), `Guide.md`,
+  `Extras.md`, this README, the licences
+
+Beside the drawer is **Install-OpenInstaller**, which puts all of it in
+place with the Installer you already have.
 
 Scripts written for OpenInstaller still run on Commodore's Installer when
 they test `@openinstaller` before using the extras.

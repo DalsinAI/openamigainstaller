@@ -50,6 +50,7 @@ typedef struct ow {
     char progress_text[512];
     int enter_btn;
     int file_button;
+    const olui_el *pic;     /* the panel's box as handed to OLUI_AmigaOwn */
 } ow;
 
 /* ---- Markup ---------------------------------------------------------------------- */
@@ -243,6 +244,15 @@ static int load(ow *w, const oi_page *p)
     m = page_markup(w, p, pn->caption);
     if (!m)
         return 0;
+    /* The last page's box goes before its elements do. olui_amiga keeps
+     * four drawn-by-us boxes and matches them by pointer: left there, the
+     * table filled after four pages (the panel then went undrawn), and an
+     * element of a later page put where the old box had been (a help
+     * page's text) was drawn over with the picture. */
+    if (w->pic) {
+        OLUI_AmigaOwn(w->a, w->pic, NULL, NULL);
+        w->pic = NULL;
+    }
     if (!OLUI_Load(w->ui, m, NULL, err, sizeof err)) {
         free(m);
         return 0;
@@ -254,8 +264,8 @@ static int load(ow *w, const oi_page *p)
     w->progress_loaded = p->kind == PG_PROGRESS;
     size_side(w);
     pic = OLUI_Find(w->ui, "pic");
-    if (pic)
-        OLUI_AmigaOwn(w->a, pic, own_pic, w);
+    if (pic && OLUI_AmigaOwn(w->a, pic, own_pic, w))
+        w->pic = pic;
     OLUI_AmigaLayout(w->a);
     focus = NULL;
     if (p->kind == PG_STRING)

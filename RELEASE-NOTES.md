@@ -1,3 +1,16 @@
+# OpenInstaller 1.0.0-rc2
+
+Fixes from running rc1 on AmigaOS 3.2.3:
+
+- Pictures in the panel came out as stripes on RTG screens. They were
+  written with the wrong pixel format (LUT8 for ARGB).
+- With no `(panel)` the panel was a black box: the logo built into
+  OpenInstaller now loads. It is written to `T:` for the datatype and
+  deleted when the window closes.
+- After a few pages (or after a Help page) the panel stopped being drawn,
+  or the picture was drawn over the page. Each page's panel box is now
+  handed back before the next page is laid out.
+
 # OpenInstaller 1.0.0
 
 The first release of OpenInstaller, the AmigaChrome Team's Installer for
