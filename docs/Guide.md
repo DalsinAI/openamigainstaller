@@ -108,6 +108,8 @@ logo until a script names a picture, and again after `(panel "")`.
 (panel "Pictures/welcome.png" (caption "MyGame 2.0"))
 ```
 
+![Install-Stages' welcome page on AmigaOS 3.2.3, with welcome.png and its caption in the panel](images/window-picture.png)
+
 Pictures are read with datatypes, so IFF ILBM, PNG, GIF and anything else
 a datatype reads will do. An animated GIF plays when gfopengif.datatype is
 installed. With another GIF datatype its first frame shows. The picture is
@@ -157,6 +159,8 @@ it was, so a missing picture never stops an install.
 The download has a page of its own in the Installer window, with a bar
 that shows the bytes so far against the size and an Abort button. The
 script waits for it, so the install goes on in order.
+
+![A download's page: the address, the bar, 57 of 722 KB, and download.gif in the panel](images/window-download.png)
 
 - `(dest)` a drawer keeps the file's own name; a file name gives it
   another.
@@ -248,5 +252,10 @@ When your users may not have OpenInstaller yet, write the script for both
 Installers (section 7) and make the icon's default tool
 `SYS:System/Installer`. Users who have OpenInstaller can switch the
 default tool to `C:OpenInstaller` and get the extras.
+
+Install-OpenInstaller itself is a script of that kind, with no extras, so
+the Installer AmigaOS 3.2 has runs it:
+
+![Install-OpenInstaller in the OS 3.2 Installer](images/classic-welcome.png)
 
 The extras are listed one by one in [Extras.md](Extras.md).

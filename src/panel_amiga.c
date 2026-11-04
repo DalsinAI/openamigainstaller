@@ -11,7 +11,8 @@
  * BitMapScale, and an animation shows its first frame.
  *
  * With no picture the panel shows the AmigaChrome logo, which is in the
- * program (logo_png.c, made from assets/ac-logo.png), read from memory.
+ * program (logo_png.c, made from assets/ac-logo.png) and read from a copy
+ * in T:.
  *
  * Copyright (c) 2026 AmigaChrome Team. MIT licence.
  */
@@ -32,6 +33,7 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/datatypes.h>
+#include <proto/dos.h>
 #include <proto/alib.h>
 #include <inline/macros.h>
 
@@ -64,13 +66,14 @@ static struct Library *CyberGfxBase;
 #define CGX_MAPATTR(bm, a) LP2(0x60, ULONG, GetCyberMapAttr, struct BitMap *, (bm), a0, ULONG, (a), d0, , CyberGfxBase)
 #define CYBRMATTR_DEPTH 0x80000007UL
 #define CYBRMATTR_ISCYBERGFX 0x80000008UL
-#define RECTFMT_ARGB 3
+#define RECTFMT_ARGB 2   /* cybergraphics: RGB 0, RGBA 1, ARGB 2, LUT8 3 */
 
 struct Library *DataTypesBase;
 static int dt_users;
 
 extern const unsigned char oi_logo_png[];
 extern const unsigned long oi_logo_png_size;
+#define LOGO_FILE "T:OpenInstaller.logo.png"
 
 struct gp_pic {
     Object *o;
@@ -118,6 +121,7 @@ static void close_dt(void)
 {
     if (--dt_users > 0)
         return;
+    DeleteFile((CONST_STRPTR)LOGO_FILE);   /* nothing when it isn't there */
     if (CyberGfxBase) {
         CloseLibrary(CyberGfxBase);
         CyberGfxBase = NULL;
@@ -179,13 +183,20 @@ gp_pic *gp_load(const char *path, struct Screen *scr)
     }
     p->src_frame = p->dst_frame = -1;
     p->bg_argb = 0xff000000UL;
+    /* The logo is written to T: and read from there as a file: from
+     * memory (DTST_MEMORY) AmigaOS 3.2.3's PNG datatype gave nothing, and
+     * the panel was an empty black box. */
+    if (!(path && *path)) {
+        BPTR fh = Open((CONST_STRPTR)LOGO_FILE, MODE_NEWFILE);
+        if (fh) {
+            LONG n = Write(fh, (APTR)oi_logo_png, (LONG)oi_logo_png_size);
+            Close(fh);
+            if (n == (LONG)oi_logo_png_size)
+                path = LOGO_FILE;
+        }
+    }
     if (path && *path)
         p->o = NewDTObject((APTR)path, DTA_SourceType, DTST_FILE, DTA_GroupID, GID_PICTURE,
-                           PDTA_Remap, TRUE, PDTA_Screen, (ULONG)scr, PDTA_DestMode, PMODE_V43,
-                           PDTA_UseFriendBitMap, TRUE, TAG_DONE);
-    else
-        p->o = NewDTObject(NULL, DTA_SourceType, DTST_MEMORY, DTA_SourceAddress, (ULONG)oi_logo_png,
-                           DTA_SourceSize, (ULONG)oi_logo_png_size, DTA_GroupID, GID_PICTURE,
                            PDTA_Remap, TRUE, PDTA_Screen, (ULONG)scr, PDTA_DestMode, PMODE_V43,
                            PDTA_UseFriendBitMap, TRUE, TAG_DONE);
     if (!p->o)
