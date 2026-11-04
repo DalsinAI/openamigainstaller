@@ -1,0 +1,7 @@
+(set @app-name "T")
+(message "logo")
+(panel "Work:OpenInstaller/Examples/Pictures/download.gif" (caption "gif"))
+(download (prompt "dl") (help "h") (source "https://raw.githubusercontent.com/DalsinAI/openamigainstaller/d11858d/rc1.lha") (dest "RAM:m3.lha"))
+(panel "Work:OpenInstaller/Examples/Pictures/done.png" (caption "done"))
+(message "done.png")
+(exit "end")
