@@ -1,0 +1,5 @@
+(set @app-name "T")
+(message "logo")
+(panel "Work:OpenInstaller/Examples/Pictures/done.png" (caption "done"))
+(message "done.png")
+(exit "end")
