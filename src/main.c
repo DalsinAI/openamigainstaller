@@ -155,7 +155,17 @@ static int amiga_args(opts *o, int argc, char **argv, char *icon, size_t iconlen
         o->headless = a[9] != 0;
         FreeArgs(rd);
         IconBase = OpenLibrary((CONST_STRPTR)"icon.library", 37);
+        /* from the Shell @icon is the script, in full, so a script finds
+         * the files beside it as it does from its icon */
         icon[0] = 0;
+        {
+            BPTR l = Lock((CONST_STRPTR)o->script, ACCESS_READ);
+            if (l) {
+                if (!NameFromLock(l, (STRPTR)icon, (LONG)iconlen))
+                    icon[0] = 0;
+                UnLock(l);
+            }
+        }
         return 0;
     }
 }

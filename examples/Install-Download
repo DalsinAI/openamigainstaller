@@ -1,0 +1,35 @@
+; $VER: Install-Download 1.0 (4.11.2026)
+; OpenInstaller example: fetch what the archive doesn't carry, with the
+; progress bar inside the Installer window, a SHA-256 check, and a way on
+; when there is no network.
+
+(set @app-name "Download")
+(set #pics (tackon (pathonly (expandpath @icon)) "Pictures"))
+(set #url "https://raw.githubusercontent.com/DalsinAI/openamigainstaller/main/LICENSE")
+(set #sum "094e584058bb48c8f2b11499d63ffc4e360785b2454521e6fb7c0274c3abe83c")
+
+(welcome "This example downloads OpenInstaller's licence to RAM:Download/ and checks it.")
+
+(set #dest "RAM:Download")
+(makedir #dest)
+
+(if (netavailable)
+    (
+        ; an animated GIF plays while the file comes in
+        (panel (tackon #pics "download.gif") (caption "Downloading"))
+        (set #ok
+            (download (prompt "Downloading the licence")
+                      (help "The file comes from GitHub over HTTPS.")
+                      (source #url)
+                      (dest #dest)
+                      (checksum #sum)
+                      (ifmissing)
+                      (optional "nofail")))
+        (if #ok
+            (panel (tackon #pics "done.png") (caption "Downloaded"))
+            (message "The download didn't work (" @ioerr "). You can fetch it later:\n\n" #url))
+    )
+    (message "There's no network, so the download is left out. Start your TCP/IP stack and run this again.")
+)
+
+(exit "The licence is in " #dest ".")

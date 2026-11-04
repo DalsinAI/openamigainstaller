@@ -1,0 +1,27 @@
+; $VER: Install-Stages 1.0 (4.11.2026)
+; OpenInstaller example: a picture for each stage of an install.
+; It copies nothing outside RAM:, so it is safe to try.
+
+(set @app-name "Stages")
+; the pictures are in Pictures/ beside this script
+(set #pics (tackon (pathonly (expandpath @icon)) "Pictures"))
+
+; before (welcome) the panel shows the AmigaChrome logo; this replaces it
+(panel (tackon #pics "welcome.png") (caption "Stages 1.0"))
+(welcome "This example changes the picture at each stage. It makes RAM:Stages and copies a file there.")
+
+(set #dest (askdir (prompt "Where should the Stages drawer go?")
+                   (help @askdir-help)
+                   (default "RAM:")))
+(set #dest (tackon #dest "Stages"))
+(set @default-dest #dest)
+
+; an IFF ILBM for the copy
+(panel (tackon #pics "copying.iff") (caption "Copying the files"))
+(makedir #dest (infos))
+(textfile (dest (tackon #dest "ReadMe.txt"))
+          (append "Installed by the OpenInstaller Stages example.\n"))
+
+; the last picture, and the last page
+(panel (tackon #pics "done.png") (caption "Finished"))
+(exit "Stages is installed in " #dest ".")

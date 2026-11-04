@@ -10,9 +10,17 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release tag to make on this commit, such as v1.0.0-rc1 (empty builds only)'
+        required: false
+
+permissions:
+  contents: write
 
 env:
-  VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v1.0-test' }}
+  # the tag without its v, or a test version for pull requests
+  VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || inputs.version || 'v1.0.0-test' }}
 
 jobs:
   host:
@@ -38,3 +46,22 @@ jobs:
         run: sh package/amiga/build-ci.sh "${VERSION#v}" dist
       - uses: actions/upload-artifact@v4
         with: { name: amiga, path: dist/* }
+
+  # A tag v*, or a run with a version, publishes the release; a version with
+  # a suffix (v1.0.0-rc1) is a pre-release.
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v') || startsWith(inputs.version, 'v')
+    needs: [host, amiga]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: dist, merge-multiple: true }
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.version || github.ref_name }}
+        run: |
+          cd dist && sha256sum * > SHA256SUMS && cd ..
+          pre=; case $TAG in *-*) pre=--prerelease ;; esac
+          gh release create "$TAG" dist/* $pre --target "$GITHUB_SHA" --title "OpenInstaller ${TAG#v}" --notes-file RELEASE-NOTES.md

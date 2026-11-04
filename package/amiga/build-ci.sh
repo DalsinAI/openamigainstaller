@@ -9,7 +9,8 @@
 # and gfopentls.library (HTTPS). Then packs
 # OpenInstaller-<version>-amiga-68040.lha: the OpenInstaller drawer with the
 # program, Libs/gfopentls.library, S/GFOpenTLS/ca-bundle.pem, the
-# licences, the documentation and an example script.
+# licences, the guide and the example scripts with their pictures, and
+# Install-OpenInstaller, which the Installer AmigaOS 3.2 has runs.
 #
 #   package/amiga/build-ci.sh VERSION OUTDIR
 set -eu
@@ -75,19 +76,29 @@ if "$TC/bin/m68k-amigaos-gcc" -m68040 -specs="$WORK/sdk/Lib/m68k-soft-m68040.spe
 fi
 echo "Soft float: yes"
 
-# 5. The archive.
+# 5. The archive: the OpenInstaller drawer, and Install-OpenInstaller beside
+#    it for the Installer AmigaOS 3.2 has. The icons are make_icons.py's.
 PKG=$WORK/pkg
+I=$HERE/files/Icons
 rm -rf "$PKG"
 D=$PKG/OpenInstaller
-mkdir -p "$D/Libs" "$D/S/GFOpenTLS" "$D/Licences" "$D/Examples"
+mkdir -p "$D/Libs" "$D/S/GFOpenTLS" "$D/Licences" "$D/Examples/Pictures"
 cp "$ROOT/OpenInstaller.68k" "$D/OpenInstaller"
-cp "$ROOT/README.md" "$ROOT/LICENSE" "$D/"
-cp "$ROOT/docs/Extras.md" "$D/"
-cp "$ROOT"/examples/* "$D/Examples/"
+cp "$ROOT/README.md" "$ROOT/LICENSE" "$ROOT/docs/Guide.md" "$ROOT/docs/Extras.md" "$D/"
+for f in README.md Guide.md Extras.md LICENSE Examples; do cp "$I/$f.info" "$D/"; done
+for f in Install-Stages Install-Download Install-Both; do
+    cp "$ROOT/examples/$f" "$I/$f.info" "$D/Examples/"
+done
+cp "$I/Pictures.info" "$D/Examples/"
+cp "$ROOT"/examples/Pictures/* "$D/Examples/Pictures/"
 cp "$WORK/net/gfopentls.library" "$D/Libs/"
 [ ! -f "$WORK/net/ca-bundle.pem" ] || cp "$WORK/net/ca-bundle.pem" "$D/S/GFOpenTLS/"
 cp "$WORK"/net/Licences/* "$D/Licences/"
 printf '%s\n' "$VERSION" > "$D/VERSION"
+cp "$I/OpenInstaller.info" "$PKG/"
+sed "s/^(set #version \"[^\"]*\")/(set #version \"$VERSION\")/; s/^; \$VER: Install-OpenInstaller [^ ]*/; \$VER: Install-OpenInstaller $VERSION/" \
+    "$HERE/files/Install-OpenInstaller" > "$PKG/Install-OpenInstaller"
+cp "$I/Install-OpenInstaller.info" "$PKG/"
 if [ -n "${PKG_OUT:-}" ]; then
     mkdir -p "$PKG_OUT" && cp -R "$PKG"/. "$PKG_OUT"/
 fi
@@ -95,6 +106,6 @@ fi
 LHA=$(command -v lha || command -v jlha)
 NAME=OpenInstaller-$VERSION-amiga-68040.lha
 rm -f "$DIST/$NAME"
-(cd "$PKG" && "$LHA" a "$DIST/$NAME" OpenInstaller)
+(cd "$PKG" && "$LHA" a "$DIST/$NAME" OpenInstaller OpenInstaller.info Install-OpenInstaller Install-OpenInstaller.info)
 "$LHA" l "$DIST/$NAME"
 ls -l "$DIST/$NAME"
