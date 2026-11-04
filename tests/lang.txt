@@ -1,0 +1,65 @@
+# Each case: a script, then ;=> and what (debug) prints, its lines joined
+# by a space. Run by run.sh with no window and no answers (each page takes
+# its default; the user level is Average).
+(debug (+ 1 2 3)) ;=> 6
+(debug (+ $ff %101 -1)) ;=> 259
+(debug (+ "2" "3")) ;=> 5
+(debug (+ 5.9 1.2)) ;=> 6
+(debug (- 10 3 2)) ;=> 5
+(debug (- 4)) ;=> -4
+(debug (* 2 3 4)) ;=> 24
+(debug (/ 7 2) (/ -7 2)) ;=> 3 -3
+(debug (= 1 1) (= 1 2) (<> 1 2) (> 2 1) (>= 2 2) (< 1 2) (<= 3 2)) ;=> 1 0 1 1 1 1 0
+(debug (= "a" "a") (= "a" "b") (= "" (cat "" "")) (= 0 "")) ;=> 1 0 1 0
+(debug (and 1 1) (and 1 0) (or 0 0) (or 0 1) (xor 1 1) (xor 1 0) (not 0) (not 5)) ;=> 1 0 0 1 0 1 1 0
+(debug (bitand 12 10) (bitor 12 10) (bitxor 12 10) (bitnot 0)) ;=> 8 14 6 -1
+(debug (shiftleft 1 4) (shiftright 256 4)) ;=> 16 16
+(debug (in 15 0 2) (in 8 0)) ;=> 5 0
+(debug (cat "a" 1 "b" 2)) ;=> a1b2
+(debug (substr "Hello" 1 3) (substr "Hello" 3) (substr "Hi" 5)) ;=> ell lo 
+(debug (strlen "abc") (strlen "")) ;=> 3 0
+(debug ("%s and %ld" "x" 42)) ;=> x and 42
+(debug ("[%5ld][%-3s][%03ld][%lx][%%]" 42 "a" 7 255)) ;=> [   42][a  ][007][ff][%]
+(debug ("%s-%s" "only")) ;=> only-
+(set f "n%ld") (debug (f 9)) ;=> n9
+(debug (tackon "Work:" "a") (tackon "Work:x" "b") (tackon "Work:x/" "b") (tackon "" "c") (tackon "Work:x" "S:y")) ;=> Work:a Work:x/b Work:x/b c S:y
+(debug (tackon "Work:x/y" "/z") (tackon "Work:x" "/z")) ;=> Work:x/z Work:z
+(debug (fileonly "Work:a/b.c") (fileonly "Work:b") (pathonly "Work:a/b.c") (pathonly "Work:b") (pathonly "b")) ;=> b.c b Work:a Work: 
+(debug (patmatch "#?.info" "Foo.INFO") (patmatch "#?.info" "Foo")) ;=> 1 0
+(debug (patmatch "(a|b)#c" "bccc") (patmatch "(a|b)#c" "cb")) ;=> 1 0
+(debug (patmatch "~(#?.info)" "x.info") (patmatch "~(#?.info)" "x")) ;=> 0 1
+(debug (patmatch "[a-c]x" "Bx") (patmatch "[~a-c]x" "dx") (patmatch "?" "ab") (patmatch "a'?" "a?")) ;=> 1 1 0 1
+(set a 1 b 2) (debug a b) ;=> 1 2
+(set #x 5) (debug #x (symbolval "#x")) ;=> 5 5
+(symbolset "v" 7) (debug v) ;=> 7
+(symbolset ("%s%ld" "v" 2) 9) (debug v2) ;=> 9
+(debug unset) ;=> 0
+(debug (if 1 "y" "n") (if 0 "y" "n") (if "" "y" "n") (if "0" "y" "n") (if 0 "y")) ;=> y n n y 0
+(if 1 ((debug "a") (debug "b"))) ;=> a b
+(set i 0) (while (< i 5) (set i (+ i 1))) (debug i) ;=> 5
+(set i 0) (until (>= i 3) (set i (+ i 1))) (debug i) ;=> 3
+(set i 9) (until 1 (set i (+ i 1))) (debug i) ;=> 10
+(debug (select 2 "a" "b" "c") (select 7 "a")) ;=> c 0
+(procedure P_ADD x y (+ x y)) (debug (P_ADD 2 3)) ;=> 5
+(debug (P_LATER)) (procedure P_LATER "later") ;=> later
+(set x 1) (procedure P_X x (set x 5)) (P_X 3) (debug x) ;=> 1
+(procedure P_F n (if (<= n 1) 1 (* n (P_F (- n 1))))) (debug (P_F 6)) ;=> 720
+(debug (trap 1 (abort "x")) "after") ;=> 1 after
+(debug (trap 4 (/ 1 0)) "after") ;=> 3 after
+(debug TRUE FALSE) ;=> 1 0
+(debug (database "cpu") (database "cpu" "68040") (database "fpu" "none")) ;=> 68040 1 0
+(debug @installer-version (> @openinstaller 0)) ;=> 3080211 1
+(debug (getversion)) ;=> 3080303
+(debug (user 2) @user-level) ;=> 1 2
+(debug (askbool (prompt "p") (help "h") (default 1))) ;=> 1
+(debug (askchoice (prompt "p") (help "h") (choices "a" "b" "c") (default 2))) ;=> 2
+(debug (askoptions (prompt "p") (help "h") (choices "a" "b" "c"))) ;=> 7
+(debug (asknumber (prompt "p") (help "h") (range 5 10) (default 7))) ;=> 7
+(debug (asknumber (prompt "p") (help "h") (range 5 10) (default 70))) ;=> 10
+(debug (askstring (prompt "p") (help "h") (default "dflt"))) ;=> dflt
+(debug (askdir (prompt "p") (help "h") (default "Work:"))) ;=> Work:
+(user 0) (debug (askchoice (prompt "p") (help "h") (choices "a" "b") (default 1))) ;=> 1
+(debug (exists "nothere")) ;=> 0
+(debug (protect "nothere")) ;=> -1
+(debug "a" (exit (quiet)) "b") ;=> a
+(debug "tab\tq\"\\ \x41\101") ;=> tab	q"\ AA

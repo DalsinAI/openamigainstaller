@@ -1,0 +1,40 @@
+name: Build OpenInstaller
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+env:
+  VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v1.0-test' }}
+
+jobs:
+  host:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+      - name: The language, file installs and the extras
+        run: make test
+      - name: The same under AddressSanitizer
+        run: make asan
+      - name: Built without curl
+        run: make test NO_CURL=1
+
+  amiga:
+    runs-on: ubuntu-24.04   # the toolchain needs glibc 2.38
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends jlha-utils
+      - name: 68040 soft float with the Team's toolchain, and the .lha
+        run: sh package/amiga/build-ci.sh "${VERSION#v}" dist
+      - uses: actions/upload-artifact@v4
+        with: { name: amiga, path: dist/* }
