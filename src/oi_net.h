@@ -4,7 +4,7 @@
  * the program; on the host the system's. A build without curl
  * (OI_NO_CURL) has none, and (download) says so.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #ifndef OI_NET_H
 #define OI_NET_H

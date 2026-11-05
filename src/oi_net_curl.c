@@ -3,7 +3,7 @@
  * opened for the program's task and its errno pointed at the C library's,
  * which libcurl reads; gfopencurl opens gfopentls.library itself.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_net.h"

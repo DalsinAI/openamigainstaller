@@ -8,7 +8,7 @@
  * Integers only (no floating point anywhere), so it builds soft float for
  * the 68040 with or without an FPU.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #ifndef OI_H
 #define OI_H

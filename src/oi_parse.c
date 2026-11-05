@@ -3,7 +3,7 @@
  * double or single quotes, numbers (decimal, $hex, %binary) and symbols,
  * with ; comments to the end of the line.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 

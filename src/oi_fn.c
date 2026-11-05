@@ -1,7 +1,7 @@
 /*
  * The names: built-in functions and the parameters calls take.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 

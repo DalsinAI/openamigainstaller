@@ -9,7 +9,7 @@
  * calls), not through libgfopenlayout_link.a, so without it the program
  * still starts and main.c opens the GadTools window instead.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_panel.h"

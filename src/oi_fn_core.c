@@ -2,7 +2,7 @@
  * The language's own functions: control, variables, arithmetic, logic,
  * strings, and what a script asks about the machine.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_sys.h"

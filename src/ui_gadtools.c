@@ -10,7 +10,7 @@
  * a field (with an ASL requester for the last two), asknumber a number
  * field, and the progress page a bar drawn in the screen's fill colour.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_panel.h"

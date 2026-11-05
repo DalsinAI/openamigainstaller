@@ -2,7 +2,7 @@
  * The interpreter: values, variables, calls, parameters, errors, and the
  * run of a whole script with its first and last pages.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_ui.h"

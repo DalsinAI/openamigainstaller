@@ -5,7 +5,7 @@
  * 11) or ui_gadtools.c (GadTools, when that library is missing). Every
  * page has the picture panel down its left quarter.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #ifndef UI_PAGES_H
 #define UI_PAGES_H

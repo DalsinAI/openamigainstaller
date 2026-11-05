@@ -4,7 +4,7 @@
  * give their defaults, and messages are shown only with (all), as with
  * the Installer.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_sys.h"

@@ -5,7 +5,7 @@
  * the last page. Help shows its text on a page of its own and comes back;
  * Abort asks first, as the Installer does.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_panel.h"

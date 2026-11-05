@@ -14,7 +14,7 @@
  * The window is gfopenlayout.library 11's; without that library it is
  * GadTools'. HEADLESS (or the host build) has no window: ui_text.c.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_net.h"

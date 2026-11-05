@@ -6,7 +6,7 @@
  *
  * Paths are Amiga paths throughout ("Work:Games/x", "/" for the parent).
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #ifndef OI_SYS_H
 #define OI_SYS_H

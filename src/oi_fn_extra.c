@@ -20,7 +20,7 @@
  * Scripts that must also run on Commodore's Installer can test for these
  * with (if @openinstaller ...): that variable is unset (0) there.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_net.h"

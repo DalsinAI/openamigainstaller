@@ -1,4 +1,4 @@
-/* Shared by oi_sys_posix.c and oi_sys_amiga.c. Copyright (c) 2026 AmigaChrome Team. MIT licence. */
+/* Shared by oi_sys_posix.c and oi_sys_amiga.c. Copyright (c) 2026 AmiCradle Team. MIT licence. */
 #ifndef OI_SYS_COMMON_H
 #define OI_SYS_COMMON_H
 

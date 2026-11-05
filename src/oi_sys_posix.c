@@ -4,7 +4,7 @@
  * the current folder); an empty part of a path ("a//b", or a leading /)
  * is the parent, as in AmigaDOS.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_sys.h"

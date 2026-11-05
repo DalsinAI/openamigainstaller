@@ -6,7 +6,7 @@
  * back, skip and abort; the welcome's is "LEVEL PRETEND LOG" (0-2, 0-1,
  * 0-2).
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_panel.h"

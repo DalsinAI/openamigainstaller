@@ -1,7 +1,7 @@
 /*
  * SHA-256 (FIPS 180-4) of a file, for (download (checksum ...)).
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_net.h"
