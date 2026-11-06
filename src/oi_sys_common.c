@@ -2,7 +2,7 @@
  * What both file layers share: AmigaDOS pattern matching, reading a
  * file's $VER:, and the checksum (getsum).
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_sys.h"

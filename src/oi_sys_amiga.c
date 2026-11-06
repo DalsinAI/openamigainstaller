@@ -4,7 +4,7 @@
  * off (the process's window pointer is -1) while the Installer runs, so
  * (exists) and the rest answer at once, as with (noreq).
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_sys.h"

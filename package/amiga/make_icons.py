@@ -15,7 +15,7 @@ Writes package/amiga/files/Icons/, which build-ci.sh puts in the archive:
                                start C:OpenInstaller
   Pictures.info                the example pictures' drawer
 
-MIT, Copyright (c) 2026 AmigaChrome Team."""
+MIT, Copyright (c) 2026 AmiCradle Team."""
 import sys
 from pathlib import Path
 

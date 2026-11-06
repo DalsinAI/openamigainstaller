@@ -7,7 +7,7 @@
  * main.c picks one. Each page shows the side panel (oi_panel.h) at a
  * quarter of the window's width: the script's picture, or the logo.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #ifndef OI_UI_H
 #define OI_UI_H

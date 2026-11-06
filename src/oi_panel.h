@@ -6,7 +6,7 @@
  * or newer, DalsinAI/gfopendatatypes) is there, which gives its frames;
  * with another GIF datatype its first frame shows.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #ifndef OI_PANEL_H
 #define OI_PANEL_H

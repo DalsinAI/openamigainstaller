@@ -4,7 +4,7 @@
  * and reboot. While pretending, nothing is changed unless the call has
  * (safe); each change goes to the log.
  *
- * Copyright (c) 2026 AmigaChrome Team. MIT licence.
+ * Copyright (c) 2026 AmiCradle Team. MIT licence.
  */
 #include "oi.h"
 #include "oi_sys.h"

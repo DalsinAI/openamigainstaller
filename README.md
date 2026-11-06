@@ -1,7 +1,7 @@
 # OpenInstaller
 
 An Installer for AmigaOS 3.2 that runs the Installer scripts you already
-have, written from scratch by the AmigaChrome Team. It reads the same
+have, written from scratch by the AmiCradle Team. It reads the same
 script language as Commodore's Installer (it copies the OS 3.2 Installer
 47.19: `@installer-version` says 47.19) and adds a few commands of its own:
 
@@ -89,6 +89,6 @@ gfopentls.library, all pinned, and packs the archive.
 
 ## Licence
 
-MIT. Copyright (c) 2026 AmigaChrome Team.
+MIT. Copyright (c) 2026 AmiCradle Team.
 
-Designed, tested and delivered by The AmigaChrome Team.
+Designed, tested and delivered by The AmiCradle Team.
