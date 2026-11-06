@@ -22,7 +22,9 @@
 #define OI_VERSION      1
 #define OI_REVISION     0
 #define OI_VERSTR       "1.0"
+#ifndef OI_DATE                 /* the Amiga build passes the build date */
 #define OI_DATE         "4.11.2026"
+#endif
 /* What (database "installer-version") and @installer-version report: the
  * Installer we follow, 47.19 (OS 3.2). */
 #define OI_COMPAT_VER   47
