@@ -24,9 +24,11 @@ env:
 
 jobs:
   host:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, lumavault]
     timeout-minutes: 15
     steps:
+      - name: gh (bigguy's runners don't have it)
+        run: command -v gh >/dev/null || { S=$([ "$(id -u)" = 0 ] || echo sudo); $S apt-get update -q && $S apt-get install -y -q gh; }
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
       - name: The language, file installs and the extras
@@ -37,11 +39,15 @@ jobs:
         run: make test NO_CURL=1
 
   amiga:
-    runs-on: ubuntu-24.04   # the toolchain needs glibc 2.38
+    runs-on: [self-hosted, lumavault]   # the toolchain needs glibc 2.38
     timeout-minutes: 30
     steps:
+      - name: gh (bigguy's runners don't have it)
+        run: command -v gh >/dev/null || { S=$([ "$(id -u)" = 0 ] || echo sudo); $S apt-get update -q && $S apt-get install -y -q gh; }
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends jlha-utils
+      - name: ca-certificates as Debian installs it (bigguy's image leaves out its docs, which make_ca_bundle.py checks)
+        run: S=$([ "$(id -u)" = 0 ] || echo sudo); grep -l path-exclude /etc/dpkg/dpkg.cfg.d/* 2>/dev/null | xargs -r $S rm -f; $S apt-get install -y -q --reinstall ca-certificates
       - name: 68040 soft float with the Team's toolchain, and the .lha
         run: sh package/amiga/build-ci.sh "${VERSION#v}" dist
       - uses: actions/upload-artifact@v4
@@ -52,8 +58,10 @@ jobs:
   publish:
     if: startsWith(github.ref, 'refs/tags/v') || startsWith(inputs.version, 'v')
     needs: [host, amiga]
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, lumavault]
     steps:
+      - name: gh (bigguy's runners don't have it)
+        run: command -v gh >/dev/null || { S=$([ "$(id -u)" = 0 ] || echo sudo); $S apt-get update -q && $S apt-get install -y -q gh; }
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: { path: dist, merge-multiple: true }
