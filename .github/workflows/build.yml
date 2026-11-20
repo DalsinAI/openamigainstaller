@@ -27,6 +27,8 @@ jobs:
     runs-on: [self-hosted, lumavault]
     timeout-minutes: 15
     steps:
+      - name: gh (bigguy's runners don't have it)
+        run: command -v gh >/dev/null || { S=$([ "$(id -u)" = 0 ] || echo sudo); $S apt-get update -q && $S apt-get install -y -q gh; }
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
       - name: The language, file installs and the extras
@@ -40,6 +42,8 @@ jobs:
     runs-on: [self-hosted, lumavault]   # the toolchain needs glibc 2.38
     timeout-minutes: 30
     steps:
+      - name: gh (bigguy's runners don't have it)
+        run: command -v gh >/dev/null || { S=$([ "$(id -u)" = 0 ] || echo sudo); $S apt-get update -q && $S apt-get install -y -q gh; }
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends jlha-utils
       - name: 68040 soft float with the Team's toolchain, and the .lha
@@ -54,6 +58,8 @@ jobs:
     needs: [host, amiga]
     runs-on: [self-hosted, lumavault]
     steps:
+      - name: gh (bigguy's runners don't have it)
+        run: command -v gh >/dev/null || { S=$([ "$(id -u)" = 0 ] || echo sudo); $S apt-get update -q && $S apt-get install -y -q gh; }
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: { path: dist, merge-multiple: true }
