@@ -1,0 +1,2 @@
+# Tests pull request CI does not run, one per line: the path, then why. Keep it short; every line is a gap.
+tests/run.sh needs the built installer: build.yml builds it and runs make test and make asan
