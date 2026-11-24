@@ -31,9 +31,11 @@ DIST=$(CDPATH= cd -- "$DIST" && pwd)
 cd "$WORK"
 
 # 1. The toolchain (TC: one already unpacked, for a machine that has it).
+OWN_TC=""
 if [ -n "${TC:-}" ]; then
     TC=$(CDPATH= cd -- "$TC" && pwd)
 else
+    OWN_TC=1
     if [ ! -x gcc/bin/m68k-amigaos-gcc ]; then
         curl -fsSL -o "$GCC_TAR" "https://github.com/DalsinAI/gfopengcc/releases/download/$GCC_TAG/$GCC_TAR"
         echo "$GCC_SHA  $GCC_TAR" | sha256sum -c -
@@ -56,10 +58,26 @@ fetch() {   # fetch REPO COMMIT DIR
 fetch gfopensdk "$SDK_COMMIT" sdk
 fetch gfopenlayout "$LAYOUT_COMMIT" gfopenlayout
 # build-curl.sh's gfopencurl build wants OpenNDK in the toolchain's include
-# directory; OpenInstaller itself names it with -isystem.
-cp -R sdk/OpenNDK/Include_H/. "$TC/m68k-amigaos/include/"
-[ -f "$TC/m68k-amigaos/include/proto/socket.h" ] ||
-    printf '#include <proto/bsdsocket.h>\n' > "$TC/m68k-amigaos/include/proto/socket.h"
+# directory; OpenInstaller itself names it with -isystem. Only into the
+# toolchain unpacked here: a TC given is someone else's (a Cradle stove,
+# shared by every build), never written to. Its compilers get the same
+# headers ahead of their own from WORK/ndk-include, through C_INCLUDE_PATH
+# and CPLUS_INCLUDE_PATH.
+if [ -n "$OWN_TC" ]; then
+    NDKINC=$TC/m68k-amigaos/include
+else
+    NDKINC=$WORK/ndk-include
+    rm -rf "$NDKINC"
+    mkdir -p "$NDKINC"
+    C_INCLUDE_PATH=$NDKINC${C_INCLUDE_PATH:+:$C_INCLUDE_PATH}
+    CPLUS_INCLUDE_PATH=$NDKINC${CPLUS_INCLUDE_PATH:+:$CPLUS_INCLUDE_PATH}
+    export C_INCLUDE_PATH CPLUS_INCLUDE_PATH
+fi
+cp -R sdk/OpenNDK/Include_H/. "$NDKINC/"
+if [ ! -f "$NDKINC/proto/socket.h" ] && [ ! -f "$TC/m68k-amigaos/include/proto/socket.h" ]; then
+    mkdir -p "$NDKINC/proto"
+    printf '#include <proto/bsdsocket.h>\n' > "$NDKINC/proto/socket.h"
+fi
 
 # 3. libcurl and gfopentls.library (build-curl.sh).
 sh "$HERE/build-curl.sh" "$TC" "$WORK/sdk/OpenNDK" "$WORK/net"
