@@ -56,5 +56,9 @@ if command -v git >/dev/null 2>&1; then
     printf '# note\n' >> "$T/tests/ci/skip.txt"; $G commit -qam four
     out=$(TEST_BASE=HEAD~1 OUT=$T/out sh "$T/tests/ci/test_all.sh")
     echo "$out" | grep -q 'untouched=0$' || { echo "FAIL a tests/ci change didn't run everything: $out"; exit 1; }
+    # what another workflow left in CI's folder (not tracked) is not this repository's test
+    mkdir -p "$T/other/tests"; printf 'exit 1\n' > "$T/other/tests/run.sh"
+    out=$(OUT=$T/out sh "$T/tests/ci/test_all.sh") || { echo "FAIL ran an untracked test: $out"; exit 1; }
+    echo "$out" | grep -q 'other/tests/run.sh' && { echo "FAIL ran an untracked test: $out"; exit 1; }
 fi
 echo "PASS ci runner: finds, fails, skips, times out, runs only what a change touches"

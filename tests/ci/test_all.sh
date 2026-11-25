@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: MIT
 # The repository's own tests, as CI runs them (LV-16: green means they ran). The tests are found, not listed:
 # every run.sh, run_*.sh, test_*.sh and test_*.py in a tests/ or test/ folder anywhere in the tree (not .git,
-# build, vendor, third_party, external, upstream or node_modules), so a new test is in CI the day it is added.
+# build, vendor, third_party, external, upstream or node_modules; in a git checkout, tracked files only), so a
+# new test is in CI the day it is added.
 # tests/ci/extra.txt adds the repository's other test commands, one a line ("name @ paths: command", run from
 # the top). A test that needs what CI's machine has not got (a stove, an Amiga, a lab) is named in
 # tests/ci/skip.txt with why; a test may also exit 77 to say it skipped itself. Each test has TEST_TIMEOUT
@@ -25,10 +26,20 @@ EXTRA=$HERE/extra.txt
 TMO=${TEST_TIMEOUT:-900}
 cd "$ROOT" || exit 2
 
+# In a git checkout only the repository's own files count: CI's folder also holds what other workflows left
+# there (another repository checked out beside it, a build's work tree), and those tests are not this one's.
+files() {
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        git ls-files | grep -vE '(^|/)(build|vendor|third_party|external|upstream|node_modules)/' |
+            grep -E '(^|/)(run\.sh|run_[^/]*\.sh|test_[^/]*\.sh|test_[^/]*\.py)$'
+    else
+        find . \( -name .git -o -name build -o -name vendor -o -name third_party -o -name external -o -name upstream \
+                  -o -name node_modules \) -prune -o -type f \( -name run.sh -o -name 'run_*.sh' -o -name 'test_*.sh' \
+                  -o -name 'test_*.py' \) -print | sed 's|^\./||'
+    fi
+}
 found() {
-    find . \( -name .git -o -name build -o -name vendor -o -name third_party -o -name external -o -name upstream \
-              -o -name node_modules \) -prune -o -type f \( -name run.sh -o -name 'run_*.sh' -o -name 'test_*.sh' \
-              -o -name 'test_*.py' \) -print | sed 's|^\./||' | grep -E '(^|/)tests?/' | grep -v '^tests/ci/' | sort
+    files | grep -E '(^|/)tests?/' | grep -v '^tests/ci/' | sort
     [ -f "$EXTRA" ] && grep -v '^#' "$EXTRA" | grep ':' | sed -e 's/:.*//' -e 's/ *@.*//' -e 's/^/extra:/'
 }
 extra_line() { grep -v '^#' "$EXTRA" | grep -E "^$1( *@[^:]*)?:" | head -n 1; }
